@@ -1,0 +1,19 @@
+
+primary_region = "iad"
+
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[checks]
+  [checks.role]
+    grace_period = "30s"
+    interval = "15s"
+    method = "get"
+    path = "/check/role"
+    port = 5500
+    timeout = "10s"
+    type = "http"
+
+[[mounts]]
+  destination = "/data"
+  source = "dragonfly_data"
