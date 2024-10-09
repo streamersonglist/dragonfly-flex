@@ -17,3 +17,7 @@ kill_timeout = 5
 [[mounts]]
   destination = "/data"
   source = "dragonfly_data"
+
+[[vm]]
+  memory = "512mb"
+  kernel_args = ["fs.file-max=65536", "vm.overcommit_memory=1"]

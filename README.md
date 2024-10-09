@@ -30,5 +30,6 @@ Variables prefixed with `FLY_` are set by Fly.io and are not configurable.
 | AWS_ENDPOINT_URL_S3 | The endpoint URL for the S3 bucket. Only used if the directory is an S3 path |  |
 | DRAGONFLY_MASTER_NAME | The name of the master node used by Redis Sentinel | mymaster |
 | DRAGONFLY_QUORUM | The number of nodes required for a quorum. Minimum of 3 nodes are required for a quorum of 2| 2 |
+| SENTINEL_DOWN_AFTER_MILLISECONDS | Milliseconds to wait before marking the master as down and attempting to failover | 60000 |
 | OTEL_EXPORTER_OTLP_ENDPOINT | The endpoint for the OpenTelemetry Collector. Will not start if not set |  | 
 | DEBUG | Enable debug logging | false |

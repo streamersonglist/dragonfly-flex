@@ -41,7 +41,7 @@ func main() {
 		log.Fatalf("failed to create node: %s", err.Error())
 	}
 
-	ip, err := updateMasterIP(ctx, node)
+	ip, err := updateSentinelConfig(ctx, node)
 	if err != nil {
 		log.Fatalf("failed to update master IP: %s", err.Error())
 	}
@@ -72,7 +72,7 @@ func main() {
 	}
 }
 
-func updateMasterIP(ctx context.Context, node *dragonfly.Node) (*string, error) {
+func updateSentinelConfig(ctx context.Context, node *dragonfly.Node) (*string, error) {
 	flyclient := fly.NewClient()
 	machines, err := flyclient.ListMachines(ctx, node.AppName, nil, nil, nil)
 	if err != nil {
@@ -105,12 +105,18 @@ func updateMasterIP(ctx context.Context, node *dragonfly.Node) (*string, error) 
 		}
 	}
 
+	downAfterMilliseconds := os.Getenv("SENTINEL_DOWN_AFTER_MILLISECONDS")
+	if downAfterMilliseconds == "" {
+		downAfterMilliseconds = "60000"
+	}
+
 	content, err := os.ReadFile("/fly/sentinel.conf")
 	if err != nil {
 		return nil, err
 	}
 
 	updated := bytes.ReplaceAll(content, []byte("$MASTER_IP"), []byte(masterIP))
+	updated = bytes.ReplaceAll(updated, []byte("$SENTINEL_DOWN_AFTER_MILLISECONDS"), []byte(downAfterMilliseconds))
 
 	err = os.WriteFile("/fly/sentinel.conf", updated, 0644)
 	if err != nil {
